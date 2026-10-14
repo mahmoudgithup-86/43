@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#087f5b">
+<title>خير العمارة | إدارة التبرعات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:#087f5b;
+  --light:#e8f7ee;
+  --bg:#f5faf7;
+  --text:#183b2c;
+  --muted:#718078;
+  --border:#e1ebe4;
+  --red:#dc5353;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:'Cairo',sans-serif;min-height:100vh;
+}
+button,input,select{font:inherit}
+button{cursor:pointer;transition:.2s}
+button:active{transform:scale(.97)}
+button:focus-visible,input:focus-visible,select:focus-visible{
+  outline:2px solid #10b981;outline-offset:2px
+}
+.app{max-width:1000px;margin:auto;padding:20px}
+header{
+  background:linear-gradient(130deg,#087f5b,#10a777);
+  color:white;padding:25px;border-radius:24px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;box-shadow:0 12px 35px #087f5b20;
+  animation:slide .5s ease both;
+}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{
+  width:54px;height:54px;background:#ffffff22;border-radius:17px;
+  display:grid;place-items:center;font-size:29px
+}
+h1{font-size:24px;margin:0;font-weight:800}
+header p{margin:4px 0 0;color:#dcfce8;font-size:13px}
+.month-control{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.month-control input{
+  background:#ffffff20;border:1px solid #ffffff55;color:white;
+  border-radius:12px;padding:10px;min-width:145px
+}
+.month-control input::-webkit-calendar-picker-indicator{cursor:pointer}
+.stats{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:13px;margin:22px 0
+}
+.card,.panel{
+  background:white;border:1px solid var(--border);
+  border-radius:19px;padding:18px;
+  box-shadow:0 4px 15px #183b2c05;
+}
+.card{animation:slide .45s ease both}
+.card:nth-child(2){animation-delay:.06s}
+.card:nth-child(3){animation-delay:.12s}
+.card:nth-child(4){animation-delay:.18s}
+.stat-icon{
+  width:40px;height:40px;border-radius:13px;
+  display:grid;place-items:center;background:var(--light);
+  font-size:20px;margin-bottom:12px
+}
+.stat-label{font-size:12px;color:var(--muted)}
+.stat-number{font-size:25px;font-weight:800;margin-top:3px}
+.green{color:var(--green)}
+.orange{color:#c47c17}
+.progress-area{margin-top:12px}
+.progress{height:7px;background:#e8f0eb;border-radius:10px;overflow:hidden}
+.progress span{
+  display:block;height:100%;background:linear-gradient(90deg,#10b981,#047857);
+  border-radius:10px;width:0;transition:width .7s ease
+}
+.progress-caption{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--muted)}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;margin-bottom:16px
+}
+h2{font-size:18px;margin:0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  border:0;border-radius:12px;padding:10px 15px;
+  font-weight:700;font-size:13px
+}
+.btn-primary{background:var(--green);color:white}
+.btn-primary:hover{background:#066749}
+.btn-light{background:var(--light);color:var(--green)}
+.btn-danger{background:#fff0f0;color:var(--red)}
+.filters{
+  display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px
+}
+.field{
+  border:1px solid var(--border);background:white;
+  border-radius:12px;padding:11px 13px;color:var(--text);
+  min-width:0
+}
+.search{flex:1;min-width:180px}
+.filters select{max-width:100%}
+.resident-list{display:grid;gap:10px}
+.resident{
+  display:flex;align-items:center;gap:13px;
+  padding:15px;border:1px solid var(--border);
+  border-radius:16px;background:white;
+  transition:transform .2s,border-color .2s;
+  animation:fade .3s ease both;
+}
+.resident:hover{border-color:#b7dfc7;transform:translateY(-2px)}
+.avatar{
+  width:46px;height:46px;flex-shrink:0;border-radius:15px;
+  background:var(--light);color:var(--green);
+  display:grid;place-items:center;font-size:19px;font-weight:800
+}
+.person{flex:1;min-width:0}
+.person strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.person small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.amount{text-align:left;font-weight:800;font-size:14px;white-space:nowrap}
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  border-radius:30px;padding:4px 9px;font-size:11px;font-weight:700;
+  margin-top:5px;white-space:nowrap
+}
+.paid{background:#e4f8eb;color:#087f48}
+.unpaid{background:#fff3df;color:#a9680b}
+.exempt{background:#edf0f2;color:#64717a}
+.row-actions{display:flex;gap:6px;flex-wrap:wrap}
+.small-btn{
+  border:1px solid var(--border);background:white;
+  border-radius:10px;padding:8px 10px;font-size:12px;font-weight:700
+}
+.small-btn.pay{background:var(--light);border-color:#d4eddd;color:var(--green)}
+.small-btn.delete{color:var(--red)}
+.empty{text-align:center;padding:40px 10px;color:var(--muted)}
+.empty div{font-size:38px;margin-bottom:8px}
+.footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 10px}
+.footer strong{color:var(--green)}
+.overlay{
+  position:fixed;inset:0;background:#102b1f77;z-index:10;
+  display:none;align-items:center;justify-content:center;
+  padding:16px;backdrop-filter:blur(4px)
+}
+.overlay.show{display:flex;animation:fade .2s ease}
+.modal{
+  width:100%;max-width:440px;background:white;
+  border-radius:22px;padding:23px;max-height:90vh;overflow:auto;
+  animation:pop .25s ease
+}
+.modal h2{margin-bottom:18px}
+.form-grid{display:grid;gap:13px}
+.form-group{display:grid;gap:6px}
+.form-group label{font-size:13px;font-weight:700}
+.form-group input,.form-group select{
+  width:100%;border:1px solid var(--border);border-radius:12px;
+  padding:12px;background:white;color:var(--text)
+}
+.modal-actions{display:flex;gap:9px;margin-top:19px}
+.modal-actions button{flex:1}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);
+  background:#123d2c;color:white;padding:12px 20px;
+  border-radius:14px;font-size:13px;z-index:20;
+  opacity:0;pointer-events:none;transition:.3s;
+  width:max-content;max-width:90%;text-align:center
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+#report{margin-top:22px}
+.report-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+@keyframes slide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@media(max-width:650px){
+ .app{padding:12px}
+ header{padding:19px;border-radius:20px;align-items:flex-start;flex-direction:column}
+ h1{font-size:21px}
+ .month-control{width:100%}
+ .month-control input{flex:1}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+ .card{padding:13px;border-radius:16px}
+ .stat-number{font-size:23px}
+ .panel{padding:13px}
+ .toolbar{align-items:flex-start}
+ .toolbar .actions{width:100%}
+ .toolbar .actions button{flex:1}
+ .resident{padding:12px;gap:9px;flex-wrap:wrap}
+ .avatar{width:41px;height:41px}
+ .person{flex:1}
+ .amount{font-size:12px}
+ .row-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .small-btn{padding:10px 5px}
+ .filters select{flex:1}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">
+    <div class="logo">🤝</div>
+    <div>
+      <h1>خير العمارة</h1>
+      <p>كل جنيه بيفرق ❤️ — إدارة التبرعات الشهرية</p>
+    </div>
+  </div>
+  <div class="month-control">
+    <label for="month">الشهر:</label>
+    <input id="month" type="month">
+  </div>
+</header>
+
+<section class="stats">
+  <div class="card">
+    <div class="stat-icon">🏠</div>
+    <div class="stat-label">إجمالي السكان</div>
+    <div class="stat-number" id="total">0</div>
+  </div>
+  <div class="card">
+    <div class="stat-icon">💚</div>
+    <div class="stat-label">تم الدفع</div>
+    <div class="stat-number green" id="paidCount">0</div>
+  </div>
+  <div class="card">
+    <div class="stat-icon">⏳</div>
+    <div class="stat-label">لم يدفعوا</div>
+    <div class="stat-number orange" id="unpaidCount">0</div>
+  </div>
+  <div class="card">
+    <div class="stat-icon">💰</div>
+    <div class="stat-label">إجمالي التحصيل</div>
+    <div class="stat-number green" id="collected">0 <small style="font-size:12px">ج.م</small></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="toolbar">
+    <div>
+      <h2>👥 سكان العمارة</h2>
+      <div class="stat-label" style="margin-top:5px">تابع حالة الدفع لكل شقة</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-light" onclick="exportCSV()">⬇ تصدير CSV</button>
+      <button class="btn btn-primary" onclick="openModal()">＋ إضافة ساكن</button>
+    </div>
+  </div>
+
+  <div class="progress-area">
+    <div class="progress"><span id="progressBar"></span></div>
+    <div class="progress-caption">
+      <span>نسبة التحصيل</span><strong id="progressText">0%</strong>
+    </div>
+  </div>
+
+  <div class="filters" style="margin-top:18px">
+    <input class="field search" id="search" placeholder="🔍 ابحث بالاسم أو رقم الشقة...">
+    <select class="field" id="filter">
+      <option value="all">كل السكان</option>
+      <option value="paid">دفعوا</option>
+      <option value="unpaid">لم يدفعوا</option>
+      <option value="exempt">معفيون</option>
+    </select>
+  </div>
+
+  <div class="resident-list" id="residents"></div>
+  <div class="empty" id="empty" hidden>
+    <div>🏡</div>
+    مفيش سكان هنا لسه. ابدأ بإضافة أول ساكن!
+  </div>
+</section>
+
+<section class="panel" id="report">
+  <h2>📊 ملخص الشهر</h2>
+  <div class="report-row"><span>المبلغ المتوقع تحصيله</span><strong id="expected">0 جنيه</strong></div>
+  <div class="report-row"><span>تم تحصيله</span><strong class="green" id="reportCollected">0 جنيه</strong></div>
+  <div class="report-row"><span>المتبقي للتحصيل</span><strong class="orange" id="remaining">0 جنيه</strong></div>
+  <div class="report-row"><span>المعفيون</span><strong id="exemptCount">0</strong></div>
+  <div style="margin-top:16px">
+    <button class="btn btn-light" onclick="window.print()">🖨 طباعة التقرير</button>
+    <button class="btn btn-light" onclick="backup()">💾 نسخة احتياطية</button>
+    <button class="btn btn-light" onclick="document.getElementById('restoreFile').click()">📂 استعادة نسخة</button>
+    <input type="file" id="restoreFile" accept=".json,application/json" hidden onchange="restoreBackup(event)">
+  </div>
+</section>
+
+<footer class="footer">
+  <div style="font-size:23px;margin-bottom:6px">💚</div>
+  خيركم بيجمعنا
+  <div style="margin-top:8px">تصميم وتطوير <strong>Mahmoud Elbaz</strong></div>
+</footer>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h2 id="modalTitle">إضافة ساكن جديد</h2>
+    <form id="residentForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">اسم الساكن *</label>
+          <input id="name" required maxlength="100" placeholder="مثال: أحمد محمد">
+        </div>
+        <div class="form-group">
+          <label for="apt">رقم الشقة *</label>
+          <input id="apt" required maxlength="20" placeholder="مثال: 5">
+        </div>
+        <div class="form-group">
+          <label for="amount">قيمة التبرع الشهري (جنيه) *</label>
+          <input id="amount" type="number" required min="0" step="0.01" value="50">
+        </div>
+        <div class="form-group">
+          <label for="phone">رقم الهاتف (اختياري)</label>
+          <input id="phone" type="tel" maxlength="25" placeholder="01xxxxxxxxx">
+        </div>
+        <div class="form-group">
+          <label for="status">حالة الساكن</label>
+          <select id="status">
+            <option value="active">نشط</option>
+            <option value="exempt">معفى من التبرع</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-primary">حفظ البيانات</button>
+        <button type="button" class="btn btn-light" onclick="closeModal()">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'khair_building_v1';
+const now = new Date();
+$('month').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+let residents = [];
+let editId = null;
+let toastTimer;
+
+try {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed)) residents = parsed;
+  }
+} catch(e) {
+  console.error('تعذر تحميل البيانات', e);
+}
+
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(residents));
+  } catch(e) {
+    notify('تعذر حفظ البيانات. صدّر نسخة احتياطية.');
+  }
+}
+
+function monthKey() {
+  return $('month').value;
+}
+
+function payment(r) {
+  return r.payments?.[monthKey()] || 'unpaid';
+}
+
+function money(n) {
+  return Number(n || 0).toLocaleString('ar-EG',{maximumFractionDigits:2});
+}
+
+function notify(msg) {
+  $('toast').textContent = msg;
+  $('toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>$('toast').classList.remove('show'),2600);
+}
+
+function render() {
+  const month = monthKey();
+  const list = $('residents');
+  list.innerHTML = '';
+
+  const query = $('search').value.trim().toLowerCase();
+  const filter = $('filter').value;
+
+  const visible = residents.filter(r => {
+    const status = payment(r);
+    const matchesText = r.name.toLowerCase().includes(query) || r.apt.toLowerCase().includes(query);
+    const matchesFilter = filter === 'all' ||
+      (filter === 'paid' && status === 'paid') ||
+      (filter === 'unpaid' && status === 'unpaid' && r.status !== 'exempt') ||
+      (filter === 'exempt' && r.status === 'exempt');
+    return matchesText && matchesFilter;
+  }).sort((a,b)=>a.apt.localeCompare(b.apt,'ar',{numeric:true}));
+
+  const active = residents.filter(r=>r.status !== 'exempt');
+  const paid = active.filter(r=>payment(r)==='paid');
+  const exempt = residents.filter(r=>r.status==='exempt');
+  const collected = paid.reduce((s,r)=>s+Number(paymentAmount(r)),0);
+  const expected = active.reduce((s,r)=>s+Number(r.amount),0);
+  const remaining = Math.max(0,expected-collected);
+  const percent = expected ? Math.min(100,Math.round(collected/expected*100)) : 0;
+
+  $('total').textContent = residents.length;
+  $('paidCount').textContent = paid.length;
+  $('unpaidCount').textContent = active.length-paid.length;
+  $('collected').innerHTML = `${money(collected)} <small style="font-size:12px">ج.م</small>`;
+  $('progressBar').style.width = percent+'%';
+  $('progressText').textContent = percent+'%';
+  $('expected').textContent = money(expected)+' جنيه';
+  $('reportCollected').textContent = money(collected)+' جنيه';
+  $('remaining').textContent = money(remaining)+' جنيه';
+  $('exemptCount').textContent = exempt.length;
+
+  $('empty').hidden = visible.length !== 0;
+
+  visible.forEach((r,index)=>{
+    const status = payment(r);
+    const isExempt = r.status === 'exempt';
+    const isPaid = status === 'paid';
+    const item = document.createElement('article');
+    item.className = 'resident';
+    item.style.animationDelay = Math.min(index*25,250)+'ms';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = r.name.trim().charAt(0) || '؟';
+
+    const person = document.createElement('div');
+    person.className = 'person';
+    const strong = document.createElement('strong');
+    strong.textContent = r.name;
+    const small = document.createElement('small');
+    small.textContent = `شقة رقم ${r.apt}` + (r.phone ? ' · '+r.phone : '');
+    const badge = document.createElement('span');
+    badge.className = 'badge '+(isExempt?'exempt':isPaid?'paid':'unpaid');
+    badge.textContent = isExempt?'معفى':isPaid?'✓ تم الدفع':'◷ لم يدفع';
+    person.append(strong,small,badge);
+
+    const amount = document.createElement('div');
+    amount.className = 'amount';
+    amount.textContent = money(paymentAmount(r))+' ج.م';
+
+    const actions = document.createElement('div');
+    actions.className = 'row-actions';
+
+    if (!isExempt) {
+      const payBtn = document.createElement('button');
+      payBtn.className = 'small-btn pay';
+      payBtn.textContent = isPaid?'↩ إلغاء الدفع':'✓ تسجيل الدفع';
+      payBtn.onclick = ()=>togglePayment(r.id);
+      actions.append(payBtn);
+    }
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'small-btn';
+    editBtn.textContent = '✎ تعديل';
+    editBtn.onclick = ()=>openModal(r.id);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'small-btn delete';
+    deleteBtn.textContent = 'حذف';
+    deleteBtn.onclick = ()=>deleteResident(r.id);
+
+    actions.append(editBtn,deleteBtn);
+    item.append(avatar,person,amount,actions);
+    list.append(item);
+  });
+}
+
+function paymentAmount(r) {
+  const p = r.payments?.[monthKey()];
+  return p?.amount ?? r.amount;
+}
+
+function togglePayment(id) {
+  const r = residents.find(x=>x.id===id);
+  if (!r) return;
+  r.payments ||= {};
+  const key = monthKey();
+  if (r.payments[key]?.status === 'paid' || r.payments[key] === 'paid') {
+    if (!confirm('متأكد إنك عايز تلغي تسجيل الدفع للشهر ده؟')) return;
+    delete r.payments[key];
+    notify('تم إلغاء تسجيل الدفع');
+  } else {
+    const suggested = Number(r.amount) || 0;
+    const input = prompt('اكتب المبلغ اللي تم تحصيله بالجنيه:',String(suggested));
+    if (input === null) return;
+    const amount = Number(input);
+    if (!Number.isFinite(amount) || amount < 0) {
+      notify('من فضلك اكتب مبلغ صحيح');
+      return;
+    }
+    r.payments[key] = {
+      status:'paid',
+      amount,
+      date:new Date().toISOString()
+    };
+    notify('تم تسجيل الدفع بنجاح ✓');
+  }
+  save();
+  render();
+}
+
+function openModal(id=null) {
+  editId = id;
+  $('residentForm').reset();
+  $('amount').value = 50;
+  $('status').value = 'active';
+  $('modalTitle').textContent = id ? 'تعديل بيانات الساكن':'إضافة ساكن جديد';
+
+  if (id !== null) {
+    const r = residents.find(x=>x.id===id);
+    if (!r) return;
+    $('name').value = r.name;
+    $('apt').value = r.apt;
+    $('amount').value = r.amount;
+    $('phone').value = r.phone || '';
+    $('status').value = r.status || 'active';
+  }
+  $('overlay').classList.add('show');
+  setTimeout(()=>$('name').focus(),100);
+}
+
+function closeModal() {
+  $('overlay').classList.remove('show');
+  editId = null;
+}
+
+$('residentForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const name = $('name').value.trim();
+  const apt = $('apt').value.trim();
+  const amount = Number($('amount').value);
+  const phone = $('phone').value.trim();
+  const status = $('status').value;
+
+  if (!name || !apt || !Number.isFinite(amount) || amount<0) {
+    notify('راجع البيانات اللي دخلتها');
+    return;
+  }
+
+  const duplicate = residents.some(r=>r.apt===apt && r.id!==editId);
+  if (duplicate) {
+    notify('رقم الشقة مستخدم بالفعل');
+    $('apt').focus();
+    return;
+  }
+
+  if (editId !== null) {
+    const r = residents.find(x=>x.id===editId);
+    if (r) Object.assign(r,{name,apt,amount,phone,status});
+    notify('تم تعديل بيانات الساكن');
+  } else {
+    residents.push({
+      id:crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
+      name,apt,amount,phone,status,payments:{}
+    });
+    notify('تمت إضافة الساكن بنجاح');
+  }
+
+  save();
+  closeModal();
+  render();
+});
+
+function deleteResident(id) {
+  const r = residents.find(x=>x.id===id);
+  if (!r || !confirm(`متأكد إنك عايز تحذف ${r.name}؟ سيتم حذف سجلاته من هذا الجهاز.`)) return;
+  residents = residents.filter(x=>x.id!==id);
+  save();
+  render();
+  notify('تم حذف الساكن');
+}
+
+function exportCSV() {
+  const rows = [['الاسم','رقم الشقة','الهاتف','التبرع الشهري','حالة الدفع','المبلغ المدفوع','الشهر']];
+  residents.forEach(r=>rows.push([
+    r.name,r.apt,r.phone||'',r.amount,
+    r.status==='exempt'?'معفى':payment(r)==='paid'?'دفع':'لم يدفع',
+    r.status==='exempt'?'':payment(r)==='paid'?paymentAmount(r):0,
+    monthKey()
+  ]));
+  const csv = '\uFEFF'+rows.map(row=>row.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'تبرعات-العمارة-'+monthKey()+'.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  notify('تم تصدير التقرير');
+}
+
+function backup() {
+  const blob = new Blob([JSON.stringify(residents,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'backup-khair-el-3emara.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  notify('تم تنزيل النسخة الاحتياطية');
+}
+
+function restoreBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try {
+      const data = JSON.parse(reader.result);
+      if (!Array.isArray(data) || data.some(r=>!r.name || !r.apt || !r.payments)) {
+        throw new Error('Invalid data');
+      }
+      if (!confirm('استعادة النسخة هتستبدل بيانات السكان الحالية. متأكد؟')) return;
+      residents = data;
+      save();
+      render();
+      notify('تمت استعادة النسخة الاحتياطية');
+    } catch(e) {
+      notify('الملف غير صالح أو تالف');
+    } finally {
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file);
+}
+
+$('month').addEventListener('change',render);
+$('search').addEventListener('input',render);
+$('filter').addEventListener('change',render);
+
+render();
+</script>
+</body>
+</html>
